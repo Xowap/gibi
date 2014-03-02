@@ -5,7 +5,7 @@
 # Released under the terms of the WTFPL
 
 from __future__ import unicode_literals
-from gibi.io import Normalizer, FrenchNormalizer
+from gibi.io import Normalizer, FrenchNormalizer, WORD_START, WORD_STOP
 from six import StringIO
 
 
@@ -36,7 +36,8 @@ class TestIO(object):
     @staticmethod
     def test_get_words():
         src = "L'Éléphant a... La main sur le cœur"
-        dst = [list(x) for x in "l'éléphant a la main sur le cœur".split(' ')]
+        dst = [[WORD_START] + list(x) + [WORD_STOP]
+               for x in "l'éléphant a la main sur le cœur".split(' ')]
 
         r = StringIO(src)
 

@@ -10,6 +10,7 @@ import re
 
 WORD_START = False
 WORD_STOP = True
+BLANK_WORD = [WORD_START]
 
 
 class Normalizer(object):
@@ -29,14 +30,14 @@ class Normalizer(object):
                 break
 
     def words(self):
-        w = []
+        w = list(BLANK_WORD)
 
         for c in self.chars():
+            w.append(c)
+
             if c == WORD_STOP:
                 yield w
-                w = []
-            else:
-                w.append(c)
+                w = list(BLANK_WORD)
 
 
 class FrenchNormalizer(Normalizer):

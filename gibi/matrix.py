@@ -36,3 +36,21 @@ class Matrix(object):
             output[dst] = self.transition(src, dst)
 
         return output
+
+
+def bigrams(iterable):
+    pos = 0
+    tail = None
+
+    for x in iterable:
+        if pos > 0:
+            yield (tail, x)
+
+        pos += 1
+        tail = x
+
+
+def feed_matrix(normalizer, matrix):
+    for word in normalizer.words():
+        for x, y in bigrams(word):
+            matrix.increment(x, y)

@@ -7,5 +7,5 @@ env:
   - TOXENV=py27
   - TOXENV=pypy
   - TOXENV=py33
-docsinstall: pip install -q --use-mirrors tox
+docsinstall: "pip install -q --use-mirrors tox"
 script: tox

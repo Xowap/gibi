@@ -8,7 +8,7 @@ from __future__ import unicode_literals
 
 from gibi import Matrix
 from gibi.io import FrenchNormalizer
-from gibi.matrix import bigrams, feed_matrix
+from gibi.matrix import bigrams
 from six import StringIO
 
 
@@ -75,24 +75,95 @@ class TestBigrams(object):
 
 # noinspection PyAttributeOutsideInit
 class TestMatrixFeeding(object):
-    def setup_class(self):
-        self.m = Matrix()
-
-    def feed_simple(self):
+    @staticmethod
+    def test_feed_simple():
         r = StringIO('ab')
         n = FrenchNormalizer(r)
+        m = Matrix()
 
-        feed_matrix(n, self.m)
+        m.feed(n)
 
-        assert self.m.transition('a', 'b') == 1
+        assert m.transition('a', 'b') == 1
 
-    def feed_less_simple(self):
+    @staticmethod
+    def test_feed_less_simple():
         r = StringIO('ababac')
         n = FrenchNormalizer(r)
+        m = Matrix()
 
-        feed_matrix(n, self.m)
+        m.feed(n)
 
-        assert self.m.transitions('a') == {
+        assert m.transitions('a') == {
             'b': (2 / 3),
             'c': (1 / 3),
         }
+
+
+# noinspection PyAttributeOutsideInit
+class TestWordGeneration(object):
+    @staticmethod
+    def test_choose_simple_transition():
+        trans = Matrix.choose_transition({
+            'a': 0.4,
+            'b': 0.6
+        }, 0)
+
+        assert trans == 'a'
+
+        trans = Matrix.choose_transition({
+            'a': 0.6,
+            'b': 0.4
+        }, 0)
+
+        assert trans == 'b'
+
+    @staticmethod
+    def test_choose_transition():
+        trans = Matrix.choose_transition({
+            'a': 1 / 5,
+            'b': 1 / 5,
+            'c': 1 / 5,
+            False: 1 / 5,
+            True: 1 / 5,
+        }, 0.5)
+
+        assert trans == 'c'
+
+    @staticmethod
+    def test_generate_simple_word():
+        r = StringIO('abc')
+        n = FrenchNormalizer(r)
+        m = Matrix()
+
+        m.feed(n)
+
+        assert m.make_word() == 'abc'
+
+    @staticmethod
+    def test_generate_word():
+        r = StringIO('bonjour youpi tralala pouet youpla')
+        n = FrenchNormalizer(r)
+        m = Matrix()
+
+        m.feed(n)
+
+        assert m.make_word(10) == 'tr'
+
+    @staticmethod
+    def test_deterministic():
+        r = StringIO('ab ac')
+        n = FrenchNormalizer(r)
+        m = Matrix()
+
+        m.feed(n)
+
+        assert m.make_word(42) == m.make_word(42)
+        assert m.make_word(42) == m.make_word(42)
+        assert m.make_word(42) == m.make_word(42)
+        assert m.make_word(42) == m.make_word(42)
+        assert m.make_word(42) == m.make_word(42)
+        assert m.make_word(42) == m.make_word(42)
+        assert m.make_word(42) == m.make_word(42)
+        assert m.make_word(42) == m.make_word(42)
+        assert m.make_word(42) == m.make_word(42)
+        assert m.make_word(42) == m.make_word(42)

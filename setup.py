@@ -17,7 +17,7 @@ with codecs.open(_path.join(GIBI_ROOT, 'README.txt'), 'r', 'utf-8') as f:
     long_description = f.read()
 
 with codecs.open(_path.join(GIBI_ROOT, 'requirements.txt'), 'r', 'utf-8') as f:
-    requirements = f.readlines()
+    requirements = [x.strip() for x in f.readlines() if not x.startswith('tox')]
 
 setup(
     name='gibi',

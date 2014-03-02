@@ -13,7 +13,7 @@ import codecs
 GIBI_ROOT = _path.realpath(_path.join(_path.dirname(_path.abspath(__file__))))
 _sys_path.append(GIBI_ROOT)
 
-with codecs.open(_path.join(GIBI_ROOT, 'README.txt'), 'r', 'utf-8') as f:
+with codecs.open(_path.join(GIBI_ROOT, 'README.rst'), 'r', 'utf-8') as f:
     long_description = f.read()
 
 with codecs.open(_path.join(GIBI_ROOT, 'requirements.txt'), 'r', 'utf-8') as f:

@@ -7,6 +7,18 @@ It analyzes a text in order to deduce the probability of transition from one
 character to another, and then generates a completely random word that will look
 alike what you have feeded it as input.
 
+Build status
+------------
+
+.. |build-develop| image:: https://travis-ci.org/Xowap/gibi.png?branch=develop
+.. _build-develop: https://travis-ci.org/Xowap/gibi
+
+.. |build-master| image:: https://travis-ci.org/Xowap/gibi.png?branch=master
+.. _build-master: https://travis-ci.org/Xowap/gibi
+
+:develop: |build-develop|_
+:master: |build-master|_
+
 Usage
 -----
 

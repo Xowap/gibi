@@ -2,3 +2,5 @@
 /venv
 *.swp
 *.un~
+*.pyc
+__pycache__

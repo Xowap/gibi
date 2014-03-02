@@ -28,6 +28,16 @@ class Normalizer(object):
             else:
                 break
 
+    def words(self):
+        w = []
+
+        for c in self.chars():
+            if c == WORD_STOP:
+                yield w
+                w = []
+            else:
+                w.append(c)
+
 
 class FrenchNormalizer(Normalizer):
     FRENCH_CHAR = re.compile(r"^[a-z\-'àâçéêèëïîœùûü]$")
@@ -41,7 +51,11 @@ class FrenchNormalizer(Normalizer):
             c = self.reader.read(1).lower()
 
             if c == '':
-                return None
+                if self.in_word:
+                    self.in_word = False
+                    return WORD_STOP
+                else:
+                    return None
             elif self.FRENCH_CHAR.match(c):
                 self.in_word = True
                 return c

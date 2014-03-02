@@ -26,9 +26,18 @@ class TestIO(object):
 
     @staticmethod
     def test_normalize_french():
-        src = "L'Éléphant a... La main sur le cœur"
-        dst = "l'éléphant a la main sur le cœur"
+        src = "L'Éléphant a... La main sur le cœur!!!"
+        dst = "l'éléphant a la main sur le cœur "
 
         r = StringIO(src)
 
         assert "".join([x if x is not True else ' ' for x in FrenchNormalizer(r).chars()]) == dst
+
+    @staticmethod
+    def test_get_words():
+        src = "L'Éléphant a... La main sur le cœur"
+        dst = [list(x) for x in "l'éléphant a la main sur le cœur".split(' ')]
+
+        r = StringIO(src)
+
+        assert list(FrenchNormalizer(r).words()) == dst

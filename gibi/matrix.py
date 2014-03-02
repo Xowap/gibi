@@ -4,6 +4,8 @@
 # (c) 2014 Rémy Sanchez <remy.sanchez@activkonnect.com>
 # Released under the terms of the WTFPL
 
+from __future__ import unicode_literals
+
 
 class Matrix(object):
     def __init__(self):

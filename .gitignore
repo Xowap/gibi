@@ -1,4 +1,10 @@
 /.idea
+/.tox
+/dist
 /venv
+/venv2
 *.swp
 *.un~
+*.pyc
+__pycache__
+/MANIFEST

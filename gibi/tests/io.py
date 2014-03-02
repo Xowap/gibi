@@ -9,9 +9,9 @@ from gibi.io import Normalizer, FrenchNormalizer, WORD_START, WORD_STOP
 from six import StringIO
 
 
+# noinspection PyMethodMayBeStatic
 class TestIO(object):
-    @staticmethod
-    def test_normalizer_iteration():
+    def test_normalizer_iteration(self):
         class MockNormalizer(Normalizer):
             def __init__(self, *args, **kwargs):
                 super(MockNormalizer, self).__init__(*args, **kwargs)
@@ -24,8 +24,7 @@ class TestIO(object):
 
         assert "".join(MockNormalizer(None).chars()) == 'abcdefghij'
 
-    @staticmethod
-    def test_normalize_french():
+    def test_normalize_french(self):
         src = "L'Éléphant a... La main sur le cœur!!!"
         dst = "l'éléphant a la main sur le cœur "
 
@@ -33,8 +32,7 @@ class TestIO(object):
 
         assert "".join([x if x is not True else ' ' for x in FrenchNormalizer(r).chars()]) == dst
 
-    @staticmethod
-    def test_get_words():
+    def test_get_words(self):
         src = "L'Éléphant a... La main sur le cœur"
         dst = [[WORD_START] + list(x) + [WORD_STOP]
                for x in "l'éléphant a la main sur le cœur".split(' ')]

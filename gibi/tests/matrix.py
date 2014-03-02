@@ -12,35 +12,31 @@ from gibi.matrix import bigrams
 from six import StringIO
 
 
+# noinspection PyMethodMayBeStatic
 class TestMatrix(object):
-    @staticmethod
-    def test_inexistant_transition():
+    def test_inexistant_transition(self):
         m = Matrix()
         assert m.transition('a', 'b') == 0
 
-    @staticmethod
-    def test_one_edge():
+    def test_one_edge(self):
         m = Matrix()
         m.increment('a', 'b')
         assert m.transition('a', 'b') == 1
 
-    @staticmethod
-    def test_two_edges():
+    def test_two_edges(self):
         m = Matrix()
         m.increment('a', 'b')
         m.increment('a', 'c')
         assert m.transition('a', 'b') == 1
 
-    @staticmethod
-    def test_three_edges():
+    def test_three_edges(self):
         m = Matrix()
         m.increment('a', 'b')
         m.increment('a', 'b')
         m.increment('a', 'c')
         assert m.transition('a', 'b') == 2
 
-    @staticmethod
-    def test_transitions():
+    def test_transitions(self):
         m = Matrix()
         m.increment('a', 'b')
         m.increment('a', 'b')
@@ -51,32 +47,27 @@ class TestMatrix(object):
         }
 
 
+# noinspection PyMethodMayBeStatic
 class TestBigrams(object):
-    @staticmethod
-    def on_zero():
+    def on_zero(self):
         assert list(bigrams([])) == []
 
-    @staticmethod
-    def on_one():
+    def on_one(self):
         assert list(bigrams([1])) == []
 
-    @staticmethod
-    def on_two():
+    def on_two(self):
         assert list(bigrams([1, 2])) == [(1, 2)]
 
-    @staticmethod
-    def on_three():
+    def on_three(self):
         assert list(bigrams([1, 2, 3])) == [(1, 2), (2, 3)]
 
-    @staticmethod
-    def on_four():
+    def on_four(self):
         assert list(bigrams([1, 2, 3, 4])) == [(1, 2), (2, 3), (3, 4)]
 
 
-# noinspection PyAttributeOutsideInit
+# noinspection PyAttributeOutsideInit,PyMethodMayBeStatic
 class TestMatrixFeeding(object):
-    @staticmethod
-    def test_feed_simple():
+    def test_feed_simple(self):
         r = StringIO('ab')
         n = FrenchNormalizer(r)
         m = Matrix()
@@ -85,8 +76,7 @@ class TestMatrixFeeding(object):
 
         assert m.transition('a', 'b') == 1
 
-    @staticmethod
-    def test_feed_less_simple():
+    def test_feed_less_simple(self):
         r = StringIO('ababac')
         n = FrenchNormalizer(r)
         m = Matrix()
@@ -99,10 +89,9 @@ class TestMatrixFeeding(object):
         }
 
 
-# noinspection PyAttributeOutsideInit
+# noinspection PyAttributeOutsideInit,PyMethodMayBeStatic
 class TestWordGeneration(object):
-    @staticmethod
-    def test_choose_simple_transition():
+    def test_choose_simple_transition(self):
         trans = Matrix.choose_transition({
             'a': 0.4,
             'b': 0.6
@@ -117,8 +106,7 @@ class TestWordGeneration(object):
 
         assert trans == 'b'
 
-    @staticmethod
-    def test_choose_transition():
+    def test_choose_transition(self):
         trans = Matrix.choose_transition({
             'a': 1,
             'b': 1,
@@ -129,8 +117,7 @@ class TestWordGeneration(object):
 
         assert trans == 'c'
 
-    @staticmethod
-    def test_generate_simple_word():
+    def test_generate_simple_word(self):
         r = StringIO('abc')
         n = FrenchNormalizer(r)
         m = Matrix()
@@ -139,8 +126,7 @@ class TestWordGeneration(object):
 
         assert m.make_word() == 'abc'
 
-    @staticmethod
-    def test_generate_word():
+    def test_generate_word(self):
         r = StringIO('bonjour youpi tralala pouet youpla')
         n = FrenchNormalizer(r)
         m = Matrix()
@@ -149,8 +135,7 @@ class TestWordGeneration(object):
 
         assert m.make_word(10) == 'tr'
 
-    @staticmethod
-    def test_deterministic():
+    def test_deterministic(self):
         r = StringIO('ab ac')
         n = FrenchNormalizer(r)
         m = Matrix()

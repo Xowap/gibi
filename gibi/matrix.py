@@ -5,11 +5,23 @@
 # Released under the terms of the WTFPL
 
 from __future__ import unicode_literals
-import itertools
+import operator
 from bisect import bisect
 from gibi.io import WORD_START, WORD_STOP
 from six import StringIO, string_types
 from random import Random
+
+
+def accumulate(iterable, func=operator.add):
+    """
+    Return running totals. From Python doc.
+    """
+    it = iter(iterable)
+    total = next(it)
+    yield total
+    for element in it:
+        total = func(total, element)
+        yield total
 
 
 class Matrix(object):
@@ -77,25 +89,26 @@ class Matrix(object):
 
         weighted_choices = sorted([ComparableChoice((x, y)) for x, y in transitions.items()])
         choices, weights = zip(*weighted_choices)
-        sum_weight = list(itertools.accumulate(weights))
+        sum_weight = list(accumulate(weights))
         return choices[bisect(sum_weight, draw * sum_weight[-1])]
 
     def make_word(self, seed=None):
         if seed is not None or not self._seeded:
             self._random.seed(seed)
 
-        with StringIO() as out:
-            c = WORD_START
+        out = StringIO()
+        c = WORD_START
 
-            while True:
-                c = self.choose_transition(self.transitions(c), self._random.random())
+        while True:
+            c = self.choose_transition(self.transitions(c), self._random.random())
 
-                if c == WORD_STOP:
-                    break
-                else:
-                    out.write(c)
+            if c == WORD_STOP:
+                break
+            else:
+                out.write(c)
 
-            result = out.getvalue()
+        result = out.getvalue()
+        out.close()
 
         return result
 

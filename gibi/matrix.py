@@ -15,24 +15,21 @@ from random import Random
 class Matrix(object):
     def __init__(self):
         self.dict = {}
-        self.totals = {}
         self._seeded = False
         self._random = Random()
 
     def increment(self, src, dst):
         if src not in self.dict:
             self.dict[src] = {}
-            self.totals[src] = 0
 
         if dst not in self.dict[src]:
             self.dict[src][dst] = 0
 
         self.dict[src][dst] += 1
-        self.totals[src] += 1
 
     def transition(self, src, dst):
         if src in self.dict and dst in self.dict[src]:
-            return self.dict[src][dst] / self.totals[src]
+            return self.dict[src][dst]
         else:
             return 0
 
@@ -81,7 +78,7 @@ class Matrix(object):
         weighted_choices = sorted([ComparableChoice((x, y)) for x, y in transitions.items()])
         choices, weights = zip(*weighted_choices)
         sum_weight = list(itertools.accumulate(weights))
-        return choices[bisect(sum_weight, draw)]
+        return choices[bisect(sum_weight, draw * sum_weight[-1])]
 
     def make_word(self, seed=None):
         if seed is not None or not self._seeded:

@@ -29,7 +29,7 @@ class TestMatrix(object):
         m = Matrix()
         m.increment('a', 'b')
         m.increment('a', 'c')
-        assert m.transition('a', 'b') == 0.5
+        assert m.transition('a', 'b') == 1
 
     @staticmethod
     def test_three_edges():
@@ -37,7 +37,7 @@ class TestMatrix(object):
         m.increment('a', 'b')
         m.increment('a', 'b')
         m.increment('a', 'c')
-        assert m.transition('a', 'b') == 2 / 3
+        assert m.transition('a', 'b') == 2
 
     @staticmethod
     def test_transitions():
@@ -46,8 +46,8 @@ class TestMatrix(object):
         m.increment('a', 'b')
         m.increment('a', 'c')
         assert m.transitions('a') == {
-            'b': (2 / 3),
-            'c': (1 / 3),
+            'b': 2,
+            'c': 1,
         }
 
 
@@ -94,8 +94,8 @@ class TestMatrixFeeding(object):
         m.feed(n)
 
         assert m.transitions('a') == {
-            'b': (2 / 3),
-            'c': (1 / 3),
+            'b': 2,
+            'c': 1,
         }
 
 
@@ -120,11 +120,11 @@ class TestWordGeneration(object):
     @staticmethod
     def test_choose_transition():
         trans = Matrix.choose_transition({
-            'a': 1 / 5,
-            'b': 1 / 5,
-            'c': 1 / 5,
-            False: 1 / 5,
-            True: 1 / 5,
+            'a': 1,
+            'b': 1,
+            'c': 1,
+            False: 1,
+            True: 1,
         }, 0.5)
 
         assert trans == 'c'

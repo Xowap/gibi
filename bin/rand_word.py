@@ -12,11 +12,12 @@ from gibi.matrix import Matrix
 
 
 if __name__ == '__main__':
-    path = argv[1]
+    path = argv[2]
+    size = int(argv[1])
 
     with codecs.open(path, 'r', encoding='utf-8') as f:
         n = FrenchNormalizer(f)
-        m = Matrix()
+        m = Matrix(tail=size)
 
         m.feed(n)
 

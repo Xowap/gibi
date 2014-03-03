@@ -8,7 +8,8 @@ from __future__ import unicode_literals
 
 from gibi import Matrix
 from gibi.io import FrenchNormalizer
-from gibi.matrix import tailgrams
+from gibi.matrix import tailgrams, MatrixError
+from nose.tools.nontrivial import raises
 from six import StringIO, BytesIO
 import pickle
 
@@ -193,7 +194,16 @@ class TestWordGeneration(object):
 
         m.feed(n)
 
-        assert m.make_word(10) == 'tr'
+        assert m.make_word(10, min=0) == 'tr'
+
+    @raises(MatrixError)
+    def test_fail_on_try_exhaust(self):
+        r = StringIO('ab')
+        n = FrenchNormalizer(r)
+        m = Matrix()
+
+        m.feed(n)
+        m.make_word(tries=10)
 
     def test_deterministic(self):
         r = StringIO('ab ac')
@@ -202,13 +212,13 @@ class TestWordGeneration(object):
 
         m.feed(n)
 
-        assert m.make_word(42) == m.make_word(42)
-        assert m.make_word(42) == m.make_word(42)
-        assert m.make_word(42) == m.make_word(42)
-        assert m.make_word(42) == m.make_word(42)
-        assert m.make_word(42) == m.make_word(42)
-        assert m.make_word(42) == m.make_word(42)
-        assert m.make_word(42) == m.make_word(42)
-        assert m.make_word(42) == m.make_word(42)
-        assert m.make_word(42) == m.make_word(42)
-        assert m.make_word(42) == m.make_word(42)
+        assert m.make_word(42, min=0) == m.make_word(42, min=0)
+        assert m.make_word(42, min=0) == m.make_word(42, min=0)
+        assert m.make_word(42, min=0) == m.make_word(42, min=0)
+        assert m.make_word(42, min=0) == m.make_word(42, min=0)
+        assert m.make_word(42, min=0) == m.make_word(42, min=0)
+        assert m.make_word(42, min=0) == m.make_word(42, min=0)
+        assert m.make_word(42, min=0) == m.make_word(42, min=0)
+        assert m.make_word(42, min=0) == m.make_word(42, min=0)
+        assert m.make_word(42, min=0) == m.make_word(42, min=0)
+        assert m.make_word(42, min=0) == m.make_word(42, min=0)

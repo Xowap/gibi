@@ -41,7 +41,7 @@ class Normalizer(object):
 
 
 class FrenchNormalizer(Normalizer):
-    FRENCH_CHAR = re.compile(r"^[a-z\-'àâçéêèëïîœùûü]$")
+    FRENCH_CHAR = re.compile(r"^[a-z\-'àâçéêèëïîôœùûü]$")
 
     def __init__(self, *args, **kwargs):
         super(FrenchNormalizer, self).__init__(*args, **kwargs)

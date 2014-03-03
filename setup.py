@@ -25,7 +25,7 @@ setup(
     author='Rémy Sanchez',
     author_email='remy.sanchez@hyperthese.net',
     packages=['gibi', 'gibi.tests'],
-    scripts=['bin/rand_word.py'],
+    scripts=['bin/gibi'],
     url='https://github.com/Xowap/gibi',
     license='COPYING.txt',
     description='Generate random words based on Markov chains',

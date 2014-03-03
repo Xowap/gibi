@@ -6,11 +6,18 @@
 
 from __future__ import unicode_literals
 from gibi.io import Normalizer, FrenchNormalizer, WORD_START, WORD_STOP
+from nose.tools.nontrivial import raises
 from six import StringIO
 
 
 # noinspection PyMethodMayBeStatic
 class TestIO(object):
+    @raises(NotImplementedError)
+    def test_normalizer_bare(self):
+        r = StringIO()
+        n = Normalizer(r)
+        n.next_char()
+
     def test_normalizer_iteration(self):
         class MockNormalizer(Normalizer):
             def __init__(self, *args, **kwargs):

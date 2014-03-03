@@ -21,7 +21,7 @@ with codecs.open(_path.join(GIBI_ROOT, 'requirements.txt'), 'r', 'utf-8') as f:
 
 setup(
     name='gibi',
-    version='0.2.0',
+    version='0.2.1',
     author='Rémy Sanchez',
     author_email='remy.sanchez@hyperthese.net',
     packages=['gibi', 'gibi.tests'],

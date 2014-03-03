@@ -6,6 +6,7 @@
 
 from __future__ import unicode_literals
 import operator
+import pickle
 from bisect import bisect
 from gibi.io import WORD_START, WORD_STOP
 from six import StringIO, string_types
@@ -25,10 +26,21 @@ def accumulate(iterable, func=operator.add):
 
 
 class Matrix(object):
-    def __init__(self):
+    def __init__(self, tail=1):
         self.dict = {}
+        self.tail = tail
         self._seeded = False
         self._random = Random()
+
+    def dump(self, writer):
+        pickle.dump(self.dict, writer)
+
+    def load(self, reader):
+        self.dict = pickle.load(reader)
+
+        for src, _ in self.dict.items():
+            self.tail = len(src)
+            break
 
     def increment(self, src, dst):
         if src not in self.dict:
@@ -55,7 +67,7 @@ class Matrix(object):
 
     def feed(self, normalizer):
         for word in normalizer.words():
-            for x, y in bigrams(word):
+            for x, y in tailgrams(word, self.tail):
                 self.increment(x, y)
 
     @staticmethod
@@ -97,15 +109,17 @@ class Matrix(object):
             self._random.seed(seed)
 
         out = StringIO()
-        c = WORD_START
+        tail = CircularBuffer(self.tail)
+        tail.append(WORD_START)
 
         while True:
-            c = self.choose_transition(self.transitions(c), self._random.random())
+            c = self.choose_transition(self.transitions(tail.tuple()), self._random.random())
 
             if c == WORD_STOP:
                 break
             else:
                 out.write(c)
+                tail.append(c)
 
         result = out.getvalue()
         out.close()
@@ -113,13 +127,36 @@ class Matrix(object):
         return result
 
 
-def bigrams(iterable):
-    pos = 0
-    tail = None
+class CircularBuffer(object):
+    """
+    Stores data in a fixed-size circular buffer.
+    """
+
+    def __init__(self, size, default_value=None):
+        self.buffer = [default_value] * size
+        self.size = size
+        self.pos = 0
+
+    def append(self, value):
+        """
+        Appends some data at the end of the buffer, and automatically deletes
+        the oldest value.
+        """
+
+        self.buffer[self.pos] = value
+        self.pos = (self.pos + 1) % self.size
+
+    def tuple(self):
+        """
+        Returns the current state of the buffer as a tuple.
+        """
+
+        return tuple(self.buffer[self.pos:] + self.buffer[:self.pos])
+
+
+def tailgrams(iterable, tail=1):
+    buffer = CircularBuffer(tail)
 
     for x in iterable:
-        if pos > 0:
-            yield (tail, x)
-
-        pos += 1
-        tail = x
+        yield (buffer.tuple(), x)
+        buffer.append(x)

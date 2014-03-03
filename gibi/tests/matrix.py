@@ -8,8 +8,9 @@ from __future__ import unicode_literals
 
 from gibi import Matrix
 from gibi.io import FrenchNormalizer
-from gibi.matrix import bigrams
-from six import StringIO
+from gibi.matrix import tailgrams
+from six import StringIO, BytesIO
+import pickle
 
 
 # noinspection PyMethodMayBeStatic
@@ -48,21 +49,32 @@ class TestMatrix(object):
 
 
 # noinspection PyMethodMayBeStatic
-class TestBigrams(object):
-    def on_zero(self):
-        assert list(bigrams([])) == []
+class TestTailgrams(object):
+    def test_on_zero(self):
+        assert list(tailgrams([])) == []
 
-    def on_one(self):
-        assert list(bigrams([1])) == []
+    def test_on_one(self):
+        assert list(tailgrams([1])) == [((None,), 1)]
 
-    def on_two(self):
-        assert list(bigrams([1, 2])) == [(1, 2)]
+    def test_on_two(self):
+        assert list(tailgrams([1, 2])) == [((None,), 1), ((1,), 2)]
 
-    def on_three(self):
-        assert list(bigrams([1, 2, 3])) == [(1, 2), (2, 3)]
+    def test_on_three(self):
+        assert list(tailgrams([1, 2, 3])) == [((None,), 1), ((1,), 2), ((2,), 3)]
 
-    def on_four(self):
-        assert list(bigrams([1, 2, 3, 4])) == [(1, 2), (2, 3), (3, 4)]
+    def test_on_four(self):
+        assert list(tailgrams([1, 2, 3, 4])) == [((None,), 1), ((1,), 2), ((2,), 3), ((3,), 4)]
+
+    def test_on_five_long_tail(self):
+        print(list(tailgrams([1, 2, 3, 4, 5], 3)))
+
+        assert list(tailgrams([1, 2, 3, 4, 5], 3)) == [
+            ((None, None, None), 1),
+            ((None, None, 1), 2),
+            ((None, 1, 2), 3),
+            ((1, 2, 3), 4),
+            ((2, 3, 4), 5),
+        ]
 
 
 # noinspection PyAttributeOutsideInit,PyMethodMayBeStatic
@@ -74,7 +86,7 @@ class TestMatrixFeeding(object):
 
         m.feed(n)
 
-        assert m.transition('a', 'b') == 1
+        assert m.transition(('a',), 'b') == 1
 
     def test_feed_less_simple(self):
         r = StringIO('ababac')
@@ -83,10 +95,58 @@ class TestMatrixFeeding(object):
 
         m.feed(n)
 
-        assert m.transitions('a') == {
+        assert m.transitions(('a',)) == {
             'b': 2,
             'c': 1,
         }
+
+
+# noinspection PyMethodMayBeStatic
+class TestMatrixSerialization(object):
+    def test_write(self):
+        r = StringIO('ab')
+        n = FrenchNormalizer(r)
+        m = Matrix()
+        w = BytesIO()
+
+        m.feed(n)
+        m.dump(w)
+
+        expected = {
+            (None,): {
+                False: 1,
+            },
+            (False,): {
+                'a': 1,
+            },
+            ('a',): {
+                'b': 1,
+            },
+            ('b',): {
+                True: 1
+            }
+        }
+
+        print(pickle.loads(w.getvalue()))
+        print(expected)
+
+        assert pickle.loads(w.getvalue()) == expected
+        w.close()
+
+    def test_read(self):
+        src = {
+            ('a', 'b'): {
+                'a': 1,
+                'b': 1,
+            }
+        }
+
+        r = BytesIO(pickle.dumps(src))
+        m = Matrix()
+        m.load(r)
+
+        assert m.choose_transition(m.transitions(('a', 'b')), 0.2) == 'a'
+        assert m.tail == 2
 
 
 # noinspection PyAttributeOutsideInit,PyMethodMayBeStatic

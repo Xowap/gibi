@@ -27,18 +27,24 @@ Gibi can be used either as a CLI tool, either as a library.
 CLI
 ~~~
 
-The very simple `rand_word.py` will analyze any text file, and generate a random
-word based on it.
+A tool named `gibi` helps you to generate a matrix file, and then use it to generate words. It is
+self-documented using the `--help` switch, however here is a typical workflow.
 
 .. code-block::
 
-   $ rand_word.py french_cities.txt
-   jambous-dirchetomeilla
+   $ gibi analyze corpus.txt matrix.gibi
+   $ gibi generate matrix.gibi
+
+This will analyze the `corpus.txt` file into the `matrix.gibi` file, and then produce 10 random
+words.
 
 API
 ~~~
 
-The best way to see how to use the API is to look how `rand_word.py` works:
+Basic usage
+...........
+
+In its simplest form, using the API looks like:
 
 .. code-block:: python
 
@@ -58,6 +64,22 @@ would accept. See the following example:
 .. code-block:: python
 
    assert m.make_word(42) == m.make_word(42)
+
+Using matrix files
+..................
+
+You will probably pre-generate a matrix file using `gibi analyze`, and then load the resulting file
+like this
+
+.. code-block:: python
+
+   m = Matrix()
+   with open('matrix.gibi', 'rb') as f:
+       m.load(f)
+
+   print(m.make_word())
+
+This is much more performant, as generating the matrix can be time-consuming if the corpus is big.
 
 Legal terms
 -----------

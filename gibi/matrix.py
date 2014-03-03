@@ -6,6 +6,7 @@
 
 from __future__ import unicode_literals
 import operator
+import pickle
 from bisect import bisect
 from gibi.io import WORD_START, WORD_STOP
 from six import StringIO, string_types
@@ -30,6 +31,16 @@ class Matrix(object):
         self.tail = tail
         self._seeded = False
         self._random = Random()
+
+    def dump(self, writer):
+        pickle.dump(self.dict, writer)
+
+    def load(self, reader):
+        self.dict = pickle.load(reader)
+
+        for src, _ in self.dict.items():
+            self.tail = len(src)
+            break
 
     def increment(self, src, dst):
         if src not in self.dict:

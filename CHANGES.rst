@@ -1,6 +1,11 @@
 Gibi Changelog
 ==============
 
+v0.2.1, 2014-03-03 – Forgotten character
+----------------------------------------
+
+The french character "ô" was not recognized as a proper letter.
+
 v0.2.0, 2014-03-03 – Tooling
 ----------------------------
 

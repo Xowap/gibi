@@ -1,6 +1,16 @@
 Gibi Changelog
 ==============
 
+v0.2.0, 2014-03-03 – Tooling
+----------------------------
+
+* A new `gibi` command, that handles both matrix file generation and random
+  word generation.
+* The possibility to calculate transitions from "tails": instead of just
+  looking at the last character, look at the N last characters. I guess this
+  a bit less like Markov chains. Who cares, it gives much better results.
+
+
 v0.1.1, 2014-03-02 – Packaging
 ------------------------------
 

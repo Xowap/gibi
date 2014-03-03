@@ -1,6 +1,12 @@
 Gibi Changelog
 ==============
 
+v0.2.2, 2014-03-03 – Binding words length
+-----------------------------------------
+
+A new option is introduced in order to bind words length. The default is to
+generate a word that is comprised between 3 and 30 characters long.
+
 v0.2.1, 2014-03-03 – Forgotten character
 ----------------------------------------
 

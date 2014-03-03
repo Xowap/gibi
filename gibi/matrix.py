@@ -25,6 +25,10 @@ def accumulate(iterable, func=operator.add):
         yield total
 
 
+class MatrixError(Exception):
+    pass
+
+
 class Matrix(object):
     def __init__(self, tail=1):
         self.dict = {}
@@ -104,7 +108,7 @@ class Matrix(object):
         sum_weight = list(accumulate(weights))
         return choices[bisect(sum_weight, draw * sum_weight[-1])]
 
-    def make_word(self, seed=None):
+    def make_word(self, seed=None, min=3, max=30, tries=100):
         if seed is not None or not self._seeded:
             self._random.seed(seed)
 
@@ -124,7 +128,12 @@ class Matrix(object):
         result = out.getvalue()
         out.close()
 
-        return result
+        if min <= len(result) <= max:
+            return result
+        elif tries > 0:
+            return self.make_word(seed, min, max, tries - 1)
+        else:
+            raise MatrixError
 
 
 class CircularBuffer(object):

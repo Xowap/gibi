@@ -1,6 +1,11 @@
 Gibi Changelog
 ==============
 
+v0.2.3, 2014-03-06 – Stupid packaging issues
+--------------------------------------------
+
+Just fixing an idiotic packaging issue, no code change.
+
 v0.2.2, 2014-03-03 – Binding words length
 -----------------------------------------
 
